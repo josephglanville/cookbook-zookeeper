@@ -33,4 +33,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       }
     }
   end
+
+  config.vm.provision 'shell', inline: <<-EOF.gsub(/^\s*/, '')
+    start exhibitor || true
+    start exhibitor-discovery || true
+  EOF
 end
