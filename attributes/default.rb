@@ -4,6 +4,9 @@ default['zookeeper']['version'] = '3.4.6'
 default['exhibitor']['dist_url'] = 'https://github.com/Netflix/exhibitor/archive'
 default['exhibitor']['version'] = '1.5.4'
 
+# The exhibitor discovery service is disabled by default
+default['exhibitor']['discovery']['enabled'] = false
+
 # Set this to hostname Exbhibitor UI will be available at
 # default['exhibitor']['hostname'] = 'exhibitor.hostname.com'
 

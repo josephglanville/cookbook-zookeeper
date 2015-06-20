@@ -14,12 +14,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     mkdir -p /var/lib/exhibitor
     cat << EOH > /etc/env_vars
     PORT=8181
-    CONFIG_TYPE="file"
-    FS_CONFIG_DIR="/var/lib/exhibitor"
+    CONFIG_TYPE=file
+    FS_CONFIG_DIR=/var/lib/exhibitor
+    HOSTNAME=`ifconfig eth0 | awk 'sub(/inet addr:/,""){print $1}'`
+    EXHIBITOR_HOST=`ifconfig eth0 | awk 'sub(/inet addr:/,""){print $1}'`
+    EXHIBITOR_PORT=8181
     EOH
   EOF
 
   config.vm.provision 'chef_solo' do |chef|
     chef.add_recipe 'zookeeper'
+    chef.add_recipe 'zookeeper::discovery'
+    chef.json = {
+      exhibitor: {
+        discovery: {
+          enabled: true
+        }
+      }
+    }
   end
 end
