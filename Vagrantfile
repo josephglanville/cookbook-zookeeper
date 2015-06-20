@@ -10,6 +10,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.omnibus.chef_version = :latest
   config.cache.scope = :box if Vagrant.has_plugin?('vagrant-cachier')
 
+  config.vm.provision 'chef_solo' do |chef|
+    chef.add_recipe 'zookeeper'
+    chef.add_recipe 'zookeeper::discovery'
+  end
+
   config.vm.provision 'shell', inline: <<-EOF.gsub(/^\s*/, '')
     mkdir -p /var/lib/exhibitor
     cat << EOH > /etc/env_vars
@@ -20,21 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     EXHIBITOR_HOST=`ifconfig eth0 | awk 'sub(/inet addr:/,""){print $1}'`
     EXHIBITOR_PORT=8181
     EOH
-  EOF
-
-  config.vm.provision 'chef_solo' do |chef|
-    chef.add_recipe 'zookeeper'
-    chef.add_recipe 'zookeeper::discovery'
-    chef.json = {
-      exhibitor: {
-        discovery: {
-          enabled: true
-        }
-      }
-    }
-  end
-
-  config.vm.provision 'shell', inline: <<-EOF.gsub(/^\s*/, '')
+    rm -f /etc/init/exhibitor-discovery.override
     start exhibitor || true
     start exhibitor-discovery || true
   EOF
