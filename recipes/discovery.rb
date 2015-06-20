@@ -15,5 +15,5 @@ end
 
 file '/etc/init/exhibitor-discovery.override' do
   content 'manual'
-  not_if node['exhibitor']['discovery']['enable']
+  not_if node['exhibitor']['discovery']['enabled']
 end
