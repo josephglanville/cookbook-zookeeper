@@ -24,6 +24,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     HOSTNAME=`ifconfig eth0 | awk 'sub(/inet addr:/,""){print $1}'`
     EXHIBITOR_HOST=`ifconfig eth0 | awk 'sub(/inet addr:/,""){print $1}'`
     EXHIBITOR_PORT=8181
+    EXHIBITOR_AUTH="basic"
+    EXHIBITOR_PASS="exhibitor-password"
+    EOH
+    . /etc/env_vars
+    cat << EOH > /etc/exhibitor/realm
+    exhibitor: $EXHIBITOR_PASS,exhibitor
     EOH
     rm -f /etc/init/exhibitor-discovery.override
     start exhibitor || true

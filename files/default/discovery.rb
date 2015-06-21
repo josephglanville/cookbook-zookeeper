@@ -19,12 +19,19 @@ end.parse!(ARGV)
 
 def get_servers
   host = ENV['EXHIBITOR_HOST'] || '127.0.0.1'
-  port = ENV['EXHIBITOR_PORT'] || 80
-  response = Net::HTTP.get_response(host, '/exhibitor/v1/cluster/status', port)
-  if response.code == '200'
-    JSON.parse(response.body)
-  else
-    nil
+  port = ENV['EXHIBITOR_PORT'] || 8181
+  user = ENV['EXHIBITOR_USER'] || 'exhibitor'
+  pass = ENV['EXHIBITOR_PASS']
+
+  Net::HTTP.start(host, port) do |http|
+    req = Net::HTTP::Get.new('/exhibitor/v1/cluster/status')
+    req.basic_auth(user, pass) if pass
+    res = http.request(req)
+    if res.code == '200'
+      JSON.parse(res.body)
+    else
+      nil
+    end
   end
 end
 
