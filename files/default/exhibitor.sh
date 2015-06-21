@@ -20,7 +20,7 @@ EXHIBITOR_AUTH=${EXHIBITOR_AUTH:-"none"}
 if [[ $EXHIBITOR_AUTH == "basic" ]]; then
     SECURITY_OPTS="--security /etc/exhibitor/web.xml \
         --realm exhibitor:/etc/exhibitor/realm \
-        --remoteauth exhibitor:/etc/exhibitor/realm"
+        --remoteauth type:basic"
 elif [[ $EXHIBITOR_AUTH == "none" ]]; then
     SECURITY_OPTS=""
 fi
